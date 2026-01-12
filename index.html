@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pi Demo App</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+  <script>
+    Pi.init({ version: "2.0" });
+
+    function login() {
+      Pi.authenticate(['payments','username'])
+        .then(auth => alert("مرحبا " + auth.user.username))
+        .catch(() => alert("خطأ في Login"));
+    }
+
+    function pay() {
+      Pi.createPayment({
+        amount: 1,
+        memo: "Demo Payment",
+        metadata: {}
+      }, {
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("Transaction نجحات ✅\\nTxID: " + txid);
+        },
+        onCancel: function() {
+          alert("تلغات");
+        },
+        onError: function(error) {
+          alert("Error: " + error);
+        }
+      });
+    }
+  </script>
+</head>
+
+<body style="text-align:center;margin-top:50px">
+  <h2>Pi Network Demo App</h2>
+  <button onclick="login()">Login with Pi</button><br><br>
+  <button onclick="pay()">Pay 1 Pi (Demo)</button>
+</body>
+</html>
